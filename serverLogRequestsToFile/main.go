@@ -76,9 +76,16 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Home Page")
 }
 
+func GreetUserHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, "Hello %s\n", vars["user"])
+}
+
 func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", HomeHandler)
+	r.HandleFunc("/{user}", GreetUserHandler)
 	r.Use(loggingToFileMiddleware)
 	log.Fatal(http.ListenAndServe(":8000", r))
 }
